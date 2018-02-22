@@ -1,10 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Bungee+Shade');
+
 html, body, #__next, .app-wrapper {
   height: 100%;
   width: 100%;
 }
 
 .app-wrapper {
+  background: linear-gradient(90deg, rgb(22, 237, 207), rgb(20, 57, 90));
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+
+  .logo {
+    font-family: 'Bungee Shade', cursive;
+    text-align: center;
+    font-size: 9em;
+  }
+  .sign-in-card {
+    width: initial !important;
+  }
+
+  .sign-in-form {
+    margin-top: 20px;
+  }
 }

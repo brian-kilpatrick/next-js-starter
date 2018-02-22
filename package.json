@@ -8,13 +8,15 @@
   },
   "dependencies": {
     "@zeit/next-sass": "^0.1.1",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "next": "latest",
     "node-sass": "^4.7.2",
     "nprogress": "^0.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "semantic-ui-react": "^0.68.0"
+    "semantic-ui-react": "^0.78.2"
   },
   "license": "ISC"
 }
