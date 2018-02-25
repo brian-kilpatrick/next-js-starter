@@ -1,33 +1,64 @@
 const express = require('express');
 const next = require('next');
+const passport = require('passport');
+const session = require('express-session');
+require('./config/passport')(passport);
+const flash = require('connect-flash');
 
-const port = parseInt(process.env.PORT, 10) || 3000;
+const { port, authSecret, sessionMaxAge } = require('./config/config.server');
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 app.prepare().then(() => {
   const server = express();
 
-  server.use(cookieParser());
   server.use(bodyParser.urlencoded({ extended: true }));
   server.use(bodyParser.json());
 
-  server.post('/sign-in', (req, res) => {
-    res.json(req.body)
+  server.use(session({
+    secret: authSecret,
+    cookie: {
+      maxAge: sessionMaxAge
+    },
+    resave: false,
+    saveUninitialized: false
+  }));
+
+  server.use(flash());
+
+  server.use(passport.initialize());
+  server.use(passport.session());
+
+  /**
+   * Custom Routes
+   */
+  server.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+  }));
+
+  server.get('/api/get-user', (req, res) => {
+    // it's important that the browser makes this request every time, therefore set headers to avoid any response caching
+    res.append('Cache-Control', 'no-cache');
+    res.append('Cache-Control', 'no-store');
+    res.append('Pragma', 'no-cache');
+    res.append('Expires', '0');
+    return res.send({ user: req.user });
   });
 
-  server.get('/api/example', (req, res) => res.json({ example: true }));
-
+  /**
+   * catch all to hand off to next.js
+   */
   server.get('*', (req, res) => {
     return handle(req, res)
   });
 
   server.listen(port, (err) => {
-    if (err) throw err
+    if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`)
   })
 });
