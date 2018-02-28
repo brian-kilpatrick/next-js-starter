@@ -4,6 +4,8 @@ const passport = require('passport');
 const session = require('express-session');
 require('./config/passport')(passport);
 const flash = require('connect-flash');
+const models = require('./data/models');
+const { User, Comment, Like, Setlist, SetlistSongs, Song, Post, Group, Tag } = require('./data/models');
 
 const { port, authSecret, sessionMaxAge } = require('./config/config.server');
 const dev = process.env.NODE_ENV !== 'production';
@@ -50,6 +52,10 @@ app.prepare().then(() => {
     return res.send({ user: req.user });
   });
 
+  server.get('/api/users',(req, res) => {
+    User.findAll().then((users) => res.send(users))
+  });
+
   /**
    * catch all to hand off to next.js
    */
@@ -57,8 +63,18 @@ app.prepare().then(() => {
     return handle(req, res)
   });
 
-  server.listen(port, (err) => {
-    if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`)
-  })
+  models.sync().catch(err => console.error(err.stack)).then(() => {
+    //remove this of course!
+    // User.create({
+    //   email: 'bk@bk.com',
+    //   firstName: 'Test',
+    //   lastName: 'Test',
+    //   password: 'testPassword'
+    // });
+
+    server.listen(port, (err) => {
+      if (err) throw err;
+      console.log(`> Ready on http://localhost:${port}`)
+    })
+  });
 });

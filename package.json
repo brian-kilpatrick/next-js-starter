@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@zeit/next-sass": "^0.1.1",
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "connect-flash": "^0.1.1",
     "express": "^4.16.2",
@@ -18,10 +19,13 @@
     "nprogress": "^0.2.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
     "process": "^0.11.10",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "semantic-ui-react": "^0.78.2",
+    "sequelize": "^4.34.0",
     "unfetch": "^3.0.0"
   },
   "license": "ISC"
